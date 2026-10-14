@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validator tests</title>
+    <style>
+        body { 
+            font-family: system-ui, Arial, sans-serif; 
+            max-width: 700px; 
+            margin: 1rem auto;
+            padding: 0 1rem;
+        } 
+        .pass{
+            color: #175546;     
+        }.fail{
+            color:#b42318;
+            font-weight: 700; 
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Validator tests</h1>
+        <p id="summary" role="status"></p>
+        <ul id="results"></ul>
+    </main>
+
+    <script type="module">
+        import {validators, findDuplicateWord} from './scripts/validators.js';
+
+        const cases = [
+            ['description', 'Lunch at cafeteria', true],
+            ['description', 'A', true],
+            ['description', ' Lunch', false],
+            ['description', 'Lunch ', false],
+            ['description', '', false],
+            ['amount', '12.50', true],
+            ['amount', '0', true],
+            ['amount', '1000000000.99', true],
+            ['amount', '007', false],
+            ['amount', '12.345', false],
+            ['amount', '-5', false],
+            ['amount', 'abc', false],
+            ['date', '2025-09-29', true],
+            ['date', '2024-02-29', true],
+            ['date', '2025-12-31', true],
+            ['date', '2025-02-29', false],
+            ['date', '2025-04-31', false],
+            ['date', '2025-13-01', false],
+            ['date', '25-09-29', false],  
+            ['category', 'Food', true],
+            ['category', 'Self-care', true],
+            ['category', 'Fast Food', true],
+            ['category', 'Food2', false],
+            ['category', ' Food', false]
+        ];
+
+        const results = document.getElementById('results');
+        let failed = 0;
+        function report(name, ok) {
+            if (!ok) failed++;
+            results.insertAdjacentHTML('beforeend', `<li class="${ok ? 'pass' : 'fail'}">${name}: ${ok ? 'PASS' : 'FAIL'}</li>`);
+        }
+
+        cases.forEach(([field, value, expected]) => {
+        report(`${field} "${value}" should be ${expected ? 'valid' : 'invalid'}`, validators[field](value).valid === expected);        });
+
+        report('duplicate: "the the cat" finds "the"', findDuplicateWord('the the cat') === 'the');
+        report('duplicate: "Lunch lunch" finds "Lunch"', findDuplicateWord('Lunch lunch') === 'Lunch');
+        report('duplicate: normal text finds nothing', findDuplicateWord('Lunch at cafeteria') === null);
+
+
+        const summary = document.getElementById('summary');
+        summary.textContent = failed === 0 ? 'All tests passed. ' : `${failed} test(s) failed. `;
+        summary.className = failed === 0 ? 'pass' : 'fail';
+    </script>
+</body>
+</html>

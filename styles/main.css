@@ -384,3 +384,11 @@ tbody tr:hover { background: #f1f7f5; }
     scroll-behavior: auto !important;
   }
 }
+
+
+
+
+
+.field-error.is-warning { color: #8a5a00;}
+.form-status.is-ok { color: var(--primary-dark); }
+.form-status.is-error { color: var(--danger);}
