@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Finance Tracker</title>
+  <meta name="description" content="An accessible, responsive finance tracker for students.">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="brand">Student Finance Tracker</h1>
+      <nav aria-label="Main navigation">
+        <ul class="nav-list">
+          <li><a href="#about">About</a></li>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#records">Records</a></li>
+          <li><a href="#form-section">Add / Edit</a></li>
+          <li><a href="#settings">Settings</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <div class="container">
+
+      <section id="about" class="panel" aria-labelledby="about-heading">
+        <h2 id="about-heading">About</h2>
+        <p>
+          Student Finance Tracker helps students record spending, group it by
+          category, search it with patterns, and stay under a spending cap.
+          Everything is saved in your browser, so nothing leaves your device.
+        </p>
+        <ul class="about-links">
+          <li>GitHub: <a href="https://github.com/jimmyshimwa" target="_blank" rel="noopener noreferrer">github.com/jimmyshimwa</a></li>
+          <li>Email: <a href="mailto:YOUR-EMAIL">YOUR-EMAIL</a></li>
+        </ul>
+      </section>
+
+      <section id="dashboard" class="panel" aria-labelledby="dashboard-heading">
+        <h2 id="dashboard-heading">Dashboard</h2>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Total records</h3>
+            <p class="stat-value" id="stat-count">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Sum of amounts</h3>
+            <p class="stat-value" id="stat-sum">0.00</p>
+          </div>
+          <div class="stat-card">
+            <h3>Top category</h3>
+            <p class="stat-value" id="stat-top">None yet</p>
+          </div>
+        </div>
+
+        <div class="cap-box">
+          <h3>Spending cap</h3>
+          <p id="cap-message" class="cap-message" aria-live="polite">No cap set. You can set one in Settings.</p>
+        </div>
+
+        <div class="trend-box">
+          <h3>Last 7 days</h3>
+          <ol id="trend-bars" class="trend">
+            <li><span class="bar-track"><span class="bar" style="--h: 30%"></span></span><span class="bar-label">Mon</span></li>
+            <li><span class="bar-track"><span class="bar" style="--h: 55%"></span></span><span class="bar-label">Tue</span></li>
+            <li><span class="bar-track"><span class="bar" style="--h: 20%"></span></span><span class="bar-label">Wed</span></li>
+            <li><span class="bar-track"><span class="bar" style="--h: 80%"></span></span><span class="bar-label">Thu</span></li>
+            <li><span class="bar-track"><span class="bar" style="--h: 45%"></span></span><span class="bar-label">Fri</span></li>
+            <li><span class="bar-track"><span class="bar" style="--h: 65%"></span></span><span class="bar-label">Sat</span></li>
+            <li><span class="bar-track"><span class="bar" style="--h: 10%"></span></span><span class="bar-label">Sun</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="records" class="panel" aria-labelledby="records-heading">
+        <h2 id="records-heading">Records</h2>
+
+        <div class="toolbar">
+          <div class="field">
+            <label for="search-input">Search (regex pattern)</label>
+            <input type="search" id="search-input" autocomplete="off"
+                   placeholder="e.g. (coffee|tea)" aria-describedby="search-status">
+          </div>
+
+          <div class="field check-field">
+            <input type="checkbox" id="search-case" checked>
+            <label for="search-case">Ignore case</label>
+          </div>
+
+          <div class="field">
+            <label for="sort-select">Sort by</label>
+            <select id="sort-select">
+              <option value="date-desc">Date (newest first)</option>
+              <option value="date-asc">Date (oldest first)</option>
+              <option value="desc-asc">Description (A to Z)</option>
+              <option value="desc-desc">Description (Z to A)</option>
+              <option value="amount-asc">Amount (low to high)</option>
+              <option value="amount-desc">Amount (high to low)</option>
+            </select>
+          </div>
+        </div>
+
+        <p id="search-status" class="field-error" role="status"></p>
+
+        <div class="table-wrap">
+          <table id="records-table">
+            <caption class="visually-hidden">Your transactions</caption>
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Description</th>
+                <th scope="col">Category</th>
+                <th scope="col" class="num">Amount</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="records-body">
+              <tr>
+                <td>2025-09-29</td>
+                <td>Lunch at cafeteria</td>
+                <td>Food</td>
+                <td class="num">12.50</td>
+                <td>
+                  <button type="button" class="btn btn-small btn-secondary">Edit</button>
+                  <button type="button" class="btn btn-small btn-danger">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ul id="records-cards" class="cards">
+          <li class="card">
+            <p class="card-title">Lunch at cafeteria</p>
+            <p class="card-meta">Food &middot; 2025-09-29</p>
+            <p class="card-amount">12.50</p>
+            <div class="card-actions">
+              <button type="button" class="btn btn-small btn-secondary">Edit</button>
+              <button type="button" class="btn btn-small btn-danger">Delete</button>
+            </div>
+          </li>
+        </ul>
+
+        <p id="empty-message" class="muted" hidden>No records to show.</p>
+      </section>
+
+      <section id="form-section" class="panel" aria-labelledby="form-heading">
+        <h2 id="form-heading">Add / Edit transaction</h2>
+
+        <form id="record-form" novalidate>
+          <input type="hidden" id="record-id">
+
+          <div class="field">
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" autocomplete="off"
+                   aria-describedby="description-error">
+            <p class="field-error" id="description-error" aria-live="polite"></p>
+          </div>
+
+          <div class="field">
+            <label for="amount">Amount</label>
+            <input type="text" id="amount" name="amount" inputmode="decimal" autocomplete="off"
+                   aria-describedby="amount-error">
+            <p class="field-error" id="amount-error" aria-live="polite"></p>
+          </div>
+
+          <div class="field">
+            <label for="category">Category</label>
+            <input type="text" id="category" name="category" list="category-options" autocomplete="off"
+                   aria-describedby="category-error">
+            <datalist id="category-options">
+              <option value="Food"></option>
+              <option value="Books"></option>
+              <option value="Transport"></option>
+              <option value="Entertainment"></option>
+              <option value="Fees"></option>
+              <option value="Other"></option>
+            </datalist>
+            <p class="field-error" id="category-error" aria-live="polite"></p>
+          </div>
+
+          <div class="field">
+            <label for="date">Date (YYYY-MM-DD)</label>
+            <input type="text" id="date" name="date" placeholder="2025-09-29" autocomplete="off"
+                   aria-describedby="date-error">
+            <p class="field-error" id="date-error" aria-live="polite"></p>
+          </div>
+
+          <p id="form-status" class="form-status" role="status"></p>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="save-btn">Save</button>
+            <button type="button" class="btn btn-secondary" id="cancel-btn">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="settings" class="panel" aria-labelledby="settings-heading">
+        <h2 id="settings-heading">Settings</h2>
+
+        <div class="settings-grid">
+          <fieldset>
+            <legend>Categories</legend>
+            <div class="field">
+              <label for="new-category">New category</label>
+              <input type="text" id="new-category" autocomplete="off" aria-describedby="new-category-error">
+              <p class="field-error" id="new-category-error" aria-live="polite"></p>
+            </div>
+            <button type="button" class="btn btn-secondary" id="add-category-btn">Add category</button>
+            <ul id="category-list" class="tag-list">
+              <li>Food</li><li>Books</li><li>Transport</li><li>Entertainment</li><li>Fees</li><li>Other</li>
+            </ul>
+          </fieldset>
+
+          <fieldset>
+            <legend>Spending cap</legend>
+            <div class="field">
+              <label for="cap-input">Cap / target amount</label>
+              <input type="text" id="cap-input" inputmode="decimal" autocomplete="off" aria-describedby="cap-error">
+              <p class="field-error" id="cap-error" aria-live="polite"></p>
+            </div>
+            <button type="button" class="btn btn-secondary" id="save-cap-btn">Save cap</button>
+          </fieldset>
+
+          <fieldset>
+            <legend>Currency</legend>
+            <div class="field">
+              <label for="base-currency">Base currency code</label>
+              <input type="text" id="base-currency" value="RWF" maxlength="3" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="currency-2">Currency 2 code</label>
+              <input type="text" id="currency-2" value="USD" maxlength="3" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="rate-2">Currency 2 rate (1 unit = how many base?)</label>
+              <input type="text" id="rate-2" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="currency-3">Currency 3 code</label>
+              <input type="text" id="currency-3" value="EUR" maxlength="3" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="rate-3">Currency 3 rate (1 unit = how many base?)</label>
+              <input type="text" id="rate-3" inputmode="decimal" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="display-currency">Show amounts in</label>
+              <select id="display-currency">
+                <option value="base">Base currency</option>
+                <option value="c2">Currency 2</option>
+                <option value="c3">Currency 3</option>
+              </select>
+            </div>
+            <button type="button" class="btn btn-secondary" id="save-currency-btn">Save currency settings</button>
+          </fieldset>
+
+          <fieldset>
+            <legend>Data</legend>
+            <button type="button" class="btn btn-secondary" id="export-btn">Export records (JSON)</button>
+            <div class="field">
+              <label for="import-file">Import records (JSON file)</label>
+              <input type="file" id="import-file" accept="application/json,.json">
+            </div>
+            <p id="data-status" class="form-status" role="status"></p>
+          </fieldset>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 Student Finance Tracker. Built with HTML, CSS and JavaScript.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="scripts/ui.js"></script>
+</body>
+</html>
