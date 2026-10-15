@@ -11,3 +11,15 @@ export function load() {
 export function save(records) {
     localStorage.setItem(KEY, JSON.stringify(records));
 }
+
+export function loadSetting(name, fallback){
+    try {
+    return JSON.parse(localStorage.getItem('sft-' + name)) ?? fallback;    
+} catch {
+        return fallback;
+    }
+}
+
+export function saveSetting(name, value) {
+    localStorage.setItem('sft-' + name, JSON.stringify(value));
+}

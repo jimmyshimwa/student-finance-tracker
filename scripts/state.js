@@ -1,4 +1,4 @@
-import { load, save} from './storage.js';
+import { load, save, loadSetting, saveSetting } from './storage.js';
 
 export const records = load();
 const now = () => new Date().toISOString();
@@ -28,4 +28,33 @@ export function sortRecords(list, how) {
         const diff = typeof a[key] === 'number' ? a[key] - b[key] : a[key].localeCompare(b[key]);
         return diff * sign;
     });
+}
+
+export const settings = { cap: loadSetting('cap', null) };
+
+export function setCap(value) {
+    settings.cap = value;
+    saveSetting('cap', value);
+}
+
+const dayKey = (d) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+export function getStats() {
+    const sum = records.reduce((total, r) => total + r.amount, 0);
+
+    const byCategory = {};
+    records.forEach((r) => (byCategory[r.category] = (byCategory[r.category] || 0) + r.amount));
+    const top = Object.keys(byCategory).sort((a,b) => byCategory[b] - byCategory[a])[0] || 'None yet';
+    
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const total = records.filter((r) => r.date === dayKey(d)).reduce((total, r) => total + r.amount, 0);
+        days.push({ label: d.toLocaleDateString('en', { weekday: 'short' }), total });    }
+    const max = Math.max(...days.map((d) => d.total), 1);
+    days.forEach((d) => (d.percent = Math.round((d.total / max) * 100)));
+
+    return { count: records.length, sum, top, days };
 }
