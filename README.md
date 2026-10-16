@@ -3,9 +3,9 @@
 An accessible, responsive finance tracker for students, built with vanilla HTML, CSS and JavaScript (ES modules). No frameworks.
 
 **Theme:** Student Finance Tracker (light, calm colour palette)
-**Author:** YOUR-USERNAME
-**Contact:** YOUR-EMAIL
-**Live site:** https://YOUR-USERNAME.github.io/student-finance-tracker/ (added at deploy)
+**Author:** Jimmy P. SHIMWA
+**Contact:** p.shimwa@alustudent.com
+**Live site:** https://jimmyshimwa.github.io/student-finance-tracker/
 
 ## 1. Sections
 
