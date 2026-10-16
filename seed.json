@@ -1,0 +1,14 @@
+[
+  { "id": "txn_0001", "description": "Lunch at cafeteria", "amount": 12.5, "category": "Food", "date": "2025-09-29", "createdAt": "2025-09-29T12:00:00.000Z", "updatedAt": "2025-09-29T12:00:00.000Z" },
+  { "id": "txn_0002", "description": "Leap day pizza", "amount": 18, "category": "Food", "date": "2024-02-29", "createdAt": "2024-02-29T12:00:00.000Z", "updatedAt": "2024-02-29T12:00:00.000Z" },
+  { "id": "txn_0003", "description": "Old receipt from the century leap day", "amount": 3, "category": "Other", "date": "2000-02-29", "createdAt": "2000-02-29T12:00:00.000Z", "updatedAt": "2000-02-29T12:00:00.000Z" },
+  { "id": "txn_0004", "description": "Month end rent", "amount": 250000, "category": "Other", "date": "2025-01-31", "createdAt": "2025-01-31T12:00:00.000Z", "updatedAt": "2025-01-31T12:00:00.000Z" },
+  { "id": "txn_0005", "description": "Bus ticket", "amount": 0.01, "category": "Transport", "date": "2025-04-30", "createdAt": "2025-04-30T12:00:00.000Z", "updatedAt": "2025-04-30T12:00:00.000Z" },
+  { "id": "txn_0006", "description": "Textbook textbook purchase", "amount": 45.99, "category": "Books", "date": "2025-02-28", "createdAt": "2025-02-28T12:00:00.000Z", "updatedAt": "2025-02-28T12:00:00.000Z" },
+  { "id": "txn_0007", "description": "Coffee with tea at the the cafe", "amount": 7.75, "category": "Food", "date": "2025-06-30", "createdAt": "2025-06-30T12:00:00.000Z", "updatedAt": "2025-06-30T12:00:00.000Z" },
+  { "id": "txn_0008", "description": "Self-study guide for end-of-term exam", "amount": 15, "category": "Books", "date": "2025-12-31", "createdAt": "2025-12-31T12:00:00.000Z", "updatedAt": "2025-12-31T12:00:00.000Z" },
+  { "id": "txn_0009", "description": "Tuition payment", "amount": 9999999999.99, "category": "Fees", "date": "2025-03-31", "createdAt": "2025-03-31T12:00:00.000Z", "updatedAt": "2025-03-31T12:00:00.000Z" },
+  { "id": "txn_0010", "description": "Movie night with friends", "amount": 9.5, "category": "Entertainment", "date": "2025-05-31", "createdAt": "2025-05-31T12:00:00.000Z", "updatedAt": "2025-05-31T12:00:00.000Z" },
+  { "id": "txn_0011", "description": "Weekly groceries bought from the market near the university campus including fruit vegetables bread and milk", "amount": 64.2, "category": "Food", "date": "2025-07-31", "createdAt": "2025-07-31T12:00:00.000Z", "updatedAt": "2025-07-31T12:00:00.000Z" },
+  { "id": "txn_0012", "description": "Free event ticket", "amount": 0, "category": "Entertainment", "date": "2025-10-01", "createdAt": "2025-10-01T12:00:00.000Z", "updatedAt": "2025-10-01T12:00:00.000Z" }
+]

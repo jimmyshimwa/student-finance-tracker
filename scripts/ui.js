@@ -1,9 +1,15 @@
 import { validators, findDuplicateWord} from './validators.js';
-import { records, addRecord, editRecord, deleteRecord, sortRecords, getStats, settings, setCap } from './state.js';
+import { records, addRecord, editRecord, deleteRecord, sortRecords, getStats, settings, setCap, replaceRecords, convert, saveCategories, saveCurrency } from './state.js';
 import { compileRegex, highlight } from './search.js';
+import { exportJson, parseImport} from './storage.js';
 
 const $ = (id) => document.getElementById(id);
 const fields = ['description', 'amount', 'category', 'date'];
+
+const money = (n) => {
+    const c = convert(n);
+    return `${c.value.toFixed(2)} ${c.code}`;
+};
 
 function check(name) {
     const value = $(name).value;
@@ -38,7 +44,7 @@ function render() {
     $('search-status').textContent = error;
 
    const matches = (r) =>
-      [r.description, r.category, r.date, r.amount.toFixed(2)].some((text) => text.search(regex) !== -1);
+      [r.description, r.category, r.date, money(r.amount)(2)].some((text) => text.search(regex) !== -1);
     const list = sortRecords(regex ? records.filter(matches) : records, $('sort-select').value);
     const h = (text) => highlight(text, regex);
 
@@ -46,13 +52,13 @@ function render() {
 
     $('records-body').innerHTML = list
        .map((r) => `<tr><td>${h(r.date)}</td><td>${h(r.description)}</td><td>${h(r.category)}</td>
-        <td class="num">${h(r.amount.toFixed(2))}</td><td>${buttons(r.id)}</td></tr>`)
+        <td class="num">${h(money(r.amount)(2))}</td><td>${buttons(r.id)}</td></tr>`)
        .join('');
 
     $('records-cards').innerHTML = list
         .map((r) => `<li class="card"><p class="card-title">${h(r.description)}</p>
         <p class="card-meta">${h(r.category)} &middot; ${h(r.date)}</p>
-        <p class="card-amount">${h(r.amount.toFixed(2))}</p>
+        <p class="card-amount">${h(money(r.amount)(2))}</p>
         <div class="card-actions">${buttons(r.id)}</div></li>`)
         .join('');
     
@@ -64,7 +70,7 @@ function render() {
 function renderStats() {
     const s = getStats();
     $('stat-count').textContent = s.count;
-    $('stat-sum').textContent = s.sum.toFixed(2);
+    $('stat-sum').textContent = money(s.sum);
     $('stat-top').textContent = s.top;
 
     $('trend-bars').innerHTML = s.days
@@ -148,4 +154,172 @@ $('save-cap-btn').addEventListener('click', () => {
 
 $('cap-input').value = settings.cap ?? '';
 
+function renderCategories() {
+  $('category-list').innerHTML = settings.categories
+    .map((c) => `<li>${c}<button type="button" class="btn btn-danger" data-cat="${c}" aria-label="Remove ${c}">&times;</button></li>`)
+    .join('');
+  $('category-options').innerHTML = settings.categories.map((c) => `<option value="${c}"></option>`).join('');
+}
+
+$('add-category-btn').addEventListener('click', () => {
+    const name = $('new-category').value;
+    const result = validators.category(name);
+    $('new-category-error').textContent = result.message;
+    if(!result.valid) return;
+    if (settings.categories.includes(name)) {
+        $('new-category-error').textContent = 'That category already exists.';
+        return;
+    }
+
+    settings.categories.push(name);
+    saveCategories();
+    $('new-category').value = '';
+    renderCategories();
+});
+
+$('category-list').addEventListener('click', (event) => {
+    const btn = event.target.closest('button[data-cat]');
+    if (!btn) return;
+    settings.categories = settings.categories.filter((c) => c !== btn.dataset.cat);
+    saveCategories();
+    renderCategories();
+});
+
+function loadCurrencyForm() {
+    const c = settings.currency;
+    $('base-currency').value = c.base;
+    $('currency-2').value = c.c2;
+    $('rate-2').value = c.r2;
+    $('currency-3').value = c.c3;
+    $('rate-3').value = c.r3;
+    $('display-currency').value = c.show;
+}
+
+$('save-currency-btn').addEventListener('click', () => {
+    const codes = ['base-currency', 'currency-2', 'currency-3'].map((id) => $(id).value.trim().toUpperCase());
+    const rates = ['rate-2', 'rate-3'].map((id) => $(id).value.trim());
+    const show = $('display-currency').value;
+    const status = $('currency-status');
+
+    if (!codes.every((c) => /^[A-Z]{3}$/.test(c))) {
+        status.textContent = 'Currency codes must be 3 letters, like USD.';
+    } else if (!rates.every((r) => r === '' || (validators.amount(r).valid && Number(r) > 0))) {
+        status.textContent = 'Rates must be numbers greater than 0.';
+    } else if (show !== 'base' && rates[show === 'c2' ? 0 : 1] === '') {
+        status.textContent = 'Enter a rate for the currency you want to show.';
+    } else {
+        settings.currency = { base: codes[0], c2: codes[1], r2: rates[0], c3: codes[2], r3: rates[1], show };
+    saveCurrency();
+        status.textContent = 'Currency settings saved.';
+    render();
+  }
+});
+
+
+$('export-btn').addEventListener('click', () => {
+  exportJson(records);
+  $('data-status').textContent = `Exported ${records.length} records.`;
+});
+
+$('import-file').addEventListener('change', async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const status = $('data-status');
+  const result = parseImport(await file.text());
+
+  if (result.error) {
+    status.textContent = `Import failed: ${result.error} Your records were not changed.`;
+  } else if (confirm(`Replace your current records with ${result.records.length} imported records?`)) {
+    replaceRecords(result.records);
+    result.records.forEach((r) => {
+      if (!settings.categories.includes(r.category)) settings.categories.push(r.category);
+    });
+    saveCategories();
+    renderCategories();
+    status.textContent = `Imported ${result.records.length} records.`;
+    render();
+  }
+  event.target.value = '';
+});
+
+$('export-btn').addEventListener('click', () => {
+  exportJson(records);
+  $('data-status').textContent = `Exported ${records.length} records.`;
+});
+
+$('import-file').addEventListener('change', async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const status = $('data-status');
+  const result = parseImport(await file.text());
+
+  if (result.error) {
+    status.textContent = `Import failed: ${result.error} Your records were not changed.`;
+  } else if (confirm(`Replace your current records with ${result.records.length} imported records?`)) {
+    replaceRecords(result.records);
+    result.records.forEach((r) => {
+      if (!settings.categories.includes(r.category)) settings.categories.push(r.category);
+    });
+    saveCategories();
+    renderCategories();
+    status.textContent = `Imported ${result.records.length} records.`;
+    render();
+  }
+  event.target.value = '';
+});
+
+$('export-btn').addEventListener('click', () => {
+  exportJson(records);
+  $('data-status').textContent = `Exported ${records.length} records.`;
+});
+
+$('import-file').addEventListener('change', async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const status = $('data-status');
+  const result = parseImport(await file.text());
+
+  if (result.error) {
+    status.textContent = `Import failed: ${result.error} Your records were not changed.`;
+  } else if (confirm(`Replace your current records with ${result.records.length} imported records?`)) {
+    replaceRecords(result.records);
+    result.records.forEach((r) => {
+      if (!settings.categories.includes(r.category)) settings.categories.push(r.category);
+    });
+    saveCategories();
+    renderCategories();
+    status.textContent = `Imported ${result.records.length} records.`;
+    render();
+  }
+  event.target.value = '';
+});
+
+$('export-btn').addEventListener('click', () => {
+  exportJson(records);
+  $('data-status').textContent = `Exported ${records.length} records.`;
+});
+
+$('import-file').addEventListener('change', async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const status = $('data-status');
+  const result = parseImport(await file.text());
+
+  if (result.error) {
+    status.textContent = `Import failed: ${result.error} Your records were not changed.`;
+  } else if (confirm(`Replace your current records with ${result.records.length} imported records?`)) {
+    replaceRecords(result.records);
+    result.records.forEach((r) => {
+      if (!settings.categories.includes(r.category)) settings.categories.push(r.category);
+    });
+    saveCategories();
+    renderCategories();
+    status.textContent = `Imported ${result.records.length} records.`;
+    render();
+  }
+  event.target.value = '';
+});
+
+renderCategories();
+loadCurrencyForm();
 render();

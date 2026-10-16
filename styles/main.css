@@ -392,3 +392,6 @@ tbody tr:hover { background: #f1f7f5; }
 .field-error.is-warning { color: #8a5a00;}
 .form-status.is-ok { color: var(--primary-dark); }
 .form-status.is-error { color: var(--danger);}
+
+
+.tag-list .btn { min-height: 28px; padding: 0 0.5rem; margin-left: 0.3rem; }

@@ -58,3 +58,21 @@ export function getStats() {
 
     return { count: records.length, sum, top, days };
 }
+
+settings.categories = loadSetting('categories', ['Food', 'Transport', 'Entertainment', 'Utilities', 'Other']);
+settings.currency = loadSetting('currency', { base: 'RWF', c2: 'USD', r2: '', c3: 'EUR', r3: '', show: 'base' });
+
+export const saveCategories = saveSetting('categories', settings.categories);
+export const saveCurrency = saveSetting('currency', settings.currency);
+
+export function replaceRecords(list) {
+    records.splice(0, records.length, ...list);
+    save(records);
+}
+
+export function convert(amount) {
+    const c = settings.currency;
+    const rate = Number(c.show === 'c2' ? c.r2 : c.r3);
+    if (c.show === 'base' || !(rate > 0)) return { value: amount, code: c.base };    return { value: amount / rate, code: c.show === 'c2' ? c.c2 : c.c3 };
+    return { value: amount / rate, code: c.show === 'c2' ? c.c2 : c.c3 };
+}
