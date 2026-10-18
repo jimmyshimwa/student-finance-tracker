@@ -44,7 +44,7 @@ function render() {
     $('search-status').textContent = error;
 
    const matches = (r) =>
-      [r.description, r.category, r.date, money(r.amount)(2)].some((text) => text.search(regex) !== -1);
+      [r.description, r.category, r.date, money(r.amount)].some((text) => text.search(regex) !== -1);
     const list = sortRecords(regex ? records.filter(matches) : records, $('sort-select').value);
     const h = (text) => highlight(text, regex);
 
@@ -52,13 +52,13 @@ function render() {
 
     $('records-body').innerHTML = list
        .map((r) => `<tr><td>${h(r.date)}</td><td>${h(r.description)}</td><td>${h(r.category)}</td>
-        <td class="num">${h(money(r.amount)(2))}</td><td>${buttons(r.id)}</td></tr>`)
+        <td class="num">${h(money(r.amount))}</td><td>${buttons(r.id)}</td></tr>`)
        .join('');
 
     $('records-cards').innerHTML = list
         .map((r) => `<li class="card"><p class="card-title">${h(r.description)}</p>
         <p class="card-meta">${h(r.category)} &middot; ${h(r.date)}</p>
-        <p class="card-amount">${h(money(r.amount)(2))}</p>
+        <p class="card-amount">${h(money(r.amount))}</p>
         <div class="card-actions">${buttons(r.id)}</div></li>`)
         .join('');
     
@@ -215,84 +215,6 @@ $('save-currency-btn').addEventListener('click', () => {
   }
 });
 
-
-$('export-btn').addEventListener('click', () => {
-  exportJson(records);
-  $('data-status').textContent = `Exported ${records.length} records.`;
-});
-
-$('import-file').addEventListener('change', async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-  const status = $('data-status');
-  const result = parseImport(await file.text());
-
-  if (result.error) {
-    status.textContent = `Import failed: ${result.error} Your records were not changed.`;
-  } else if (confirm(`Replace your current records with ${result.records.length} imported records?`)) {
-    replaceRecords(result.records);
-    result.records.forEach((r) => {
-      if (!settings.categories.includes(r.category)) settings.categories.push(r.category);
-    });
-    saveCategories();
-    renderCategories();
-    status.textContent = `Imported ${result.records.length} records.`;
-    render();
-  }
-  event.target.value = '';
-});
-
-$('export-btn').addEventListener('click', () => {
-  exportJson(records);
-  $('data-status').textContent = `Exported ${records.length} records.`;
-});
-
-$('import-file').addEventListener('change', async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-  const status = $('data-status');
-  const result = parseImport(await file.text());
-
-  if (result.error) {
-    status.textContent = `Import failed: ${result.error} Your records were not changed.`;
-  } else if (confirm(`Replace your current records with ${result.records.length} imported records?`)) {
-    replaceRecords(result.records);
-    result.records.forEach((r) => {
-      if (!settings.categories.includes(r.category)) settings.categories.push(r.category);
-    });
-    saveCategories();
-    renderCategories();
-    status.textContent = `Imported ${result.records.length} records.`;
-    render();
-  }
-  event.target.value = '';
-});
-
-$('export-btn').addEventListener('click', () => {
-  exportJson(records);
-  $('data-status').textContent = `Exported ${records.length} records.`;
-});
-
-$('import-file').addEventListener('change', async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-  const status = $('data-status');
-  const result = parseImport(await file.text());
-
-  if (result.error) {
-    status.textContent = `Import failed: ${result.error} Your records were not changed.`;
-  } else if (confirm(`Replace your current records with ${result.records.length} imported records?`)) {
-    replaceRecords(result.records);
-    result.records.forEach((r) => {
-      if (!settings.categories.includes(r.category)) settings.categories.push(r.category);
-    });
-    saveCategories();
-    renderCategories();
-    status.textContent = `Imported ${result.records.length} records.`;
-    render();
-  }
-  event.target.value = '';
-});
 
 $('export-btn').addEventListener('click', () => {
   exportJson(records);

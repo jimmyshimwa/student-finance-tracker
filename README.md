@@ -5,7 +5,7 @@ An accessible, responsive finance tracker for students, built with vanilla HTML,
 **Theme:** Student Finance Tracker (light, calm colour palette)
 **Author:** YOUR-USERNAME
 **Contact:** YOUR-EMAIL
-**Live site:** https://jimmyshimwa.github.io/student-finance-tracker/student-finance-tracker/ 
+**Live site:** https://jimmyshimwa.github.io/student-finance-tracker/
 **DEMO video:** 
 ## 1. Sections
 
