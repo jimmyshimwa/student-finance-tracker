@@ -6,7 +6,7 @@ An accessible, responsive finance tracker for students, built with vanilla HTML,
 **Author:** YOUR-USERNAME
 **Contact:** YOUR-EMAIL
 **Live site:** https://jimmyshimwa.github.io/student-finance-tracker/
-**DEMO video:** 
+**DEMO video:** https://youtu.be/kE0DawH6dMk
 ## 1. Sections
 
 1. About: purpose, GitHub link, email
