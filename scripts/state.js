@@ -62,8 +62,8 @@ export function getStats() {
 settings.categories = loadSetting('categories', ['Food', 'Transport', 'Entertainment', 'Utilities', 'Other']);
 settings.currency = loadSetting('currency', { base: 'RWF', c2: 'USD', r2: '', c3: 'EUR', r3: '', show: 'base' });
 
-export const saveCategories = saveSetting('categories', settings.categories);
-export const saveCurrency = saveSetting('currency', settings.currency);
+export const saveCategories = () => saveSetting('categories', settings.categories);
+export const saveCurrency = () => saveSetting('currency', settings.currency);
 
 export function replaceRecords(list) {
     records.splice(0, records.length, ...list);
