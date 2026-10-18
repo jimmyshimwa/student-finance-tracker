@@ -30,10 +30,10 @@ export function saveSetting(name, value) {
 export function exportJson(records) {
     const blob = new Blob([JSON.stringify(records, null, 2)], { type: 'application/json' });
     const link = document.createElement('a');
-    link.href = URL.createdObjectURL(blob);
+    link.href = URL.createObjectURL(blob);
     link.download = 'finance-records.json';
     link.click();
-    URL.revoleObjectURL(link.href);
+    URL.revokeObjectURL(link.href);
 }
 
 export function parseImport(text) {
